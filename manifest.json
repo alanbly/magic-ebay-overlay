@@ -1,0 +1,41 @@
+{
+  "name": "Magic Ebay Valuator",
+  "version": "0.0.1",
+  "description": "Overlay Dawnglare valuations on Ebay auctions",
+  "manifest_version": 2,
+  "icons": {
+    "32": "images/ebayMagic.bigE.32.png",
+    "64": "images/ebayMagic.mixed.64.png",
+    "128": "images/ebayMagic.full.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+   {
+     "matches": ["https://www.ebay.com/*"],
+     "run_at": "document_end",
+     "all_frames": true,
+     "js": ["inject.js"]
+   },
+   {
+     "matches": ["http://mtg.dawnglare.com/*"],
+     "run_at": "document_end",
+     "all_frames": true,
+     "js": ["harvest.js"]
+   }
+ ],
+  "page_action": {
+    "default_title": "First icon"
+  },
+  "permissions": [
+    "https://www.ebay.com/",
+    "https://us-central1-magic-relay.cloudfunctions.net/",
+    "activeTab",
+    "storage",
+    "tabs"
+  ]
+}
