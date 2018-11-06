@@ -53,7 +53,9 @@ const extractListingValues = el => {
   const priceDetail = el.getElementsByClassName('s-item__price')[0].parentElement;
   const price = parseFloat(priceDetail.innerText.replace(/[^0-9.]/g, ''));
 
-  const logistics = el.getElementsByClassName('s-item__logisticsCost')[0].innerText
+  const shippingDetail = el.getElementsByClassName('s-item__logisticsCost') || 
+    el.getElementsByClassName('s-item__shipping');
+  const logistics = shippingDetail && shippingDetail[0] ? shippingDetail[0].innerText : '';
   const free = logistics === 'Free Shipping';
   const shipping = free ? 0 : parseFloat(logistics.replace(/[^0-9.]/g, ''));
 
@@ -74,7 +76,7 @@ const extractListingValues = el => {
 const buildDetail = (base, set, value) => {
   // console.log('ebayMagic:inject:buildDetail', base, value);
 
-  if (!set || !value) {
+  if (!set || !value || !base) {
     return null;
   }
 
@@ -135,7 +137,8 @@ const annotatePage = priceList => {
       if (!result.priceList) {
         return reject(new Error('Attempted to annotatePage but no prices are saved'));
       }
-      const items = Array.prototype.slice.apply(document.getElementsByClassName('s-item'));
+      const main = document.getElementById('srp-river-main');
+      const items = Array.prototype.slice.apply(main.getElementsByClassName('s-item'));
       return Promise.all(items.map(injectValue(JSON.parse(result.priceList))));
     })
   );
